@@ -1,7 +1,8 @@
 # MTCL-HepaticVesselSeg2D
 - Pytorch implementation for our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation.
 - Related paper was submitted to MICCAI 2021, crossed fingers!
-- We will arrange the codes to release if the paper is accepted.
+- We will arrange the codes to release if the paper is accepted
+- I will re-arrange the preprocess and training code after finishing the terribly defeated MS thesis (o_o)
 
 ____
 ## Abstract
@@ -28,7 +29,22 @@ cd MTCL
 
 2. Preprocess
 - The preprocessing and file separating is a little complicated
-- Available when paper is accepted - I will re-arrange the preprocess and training code after finishing the terribly defeated MS thesis (o_o)
+
+dataloaders/
+├── 1_ROI_preprocess.py                       > Generate processed hepatic CT image for IRCADb                   
+├── 1_ROI_preprocess_MSD.py                   > Generate processed hepatic CT image for MSD8 
+├── 1_VesselEnhance.py                        > Generate Sato Vessel Prob Map for IRCADb 
+├── 1_VesselEnhance_MSD.py                    > Generate Sato Vessel Prob Map for MSD8 
+├── 2_IRCAD_data_processing.py                > Convert processed CT img to h5 file                   
+├── 2_IRCAD_Prob_concat.py                    > concatenate the processed img and Sato Prob Map, and convert to h5 file  
+├── 2_MSD_data_processing.py                  > Convert processed CT img to h5 file (MSD8)                   
+├── 2_MSD_Prob_concat.py                      > concatenate the processed img and Sato Prob Map, and convert to h5 file (MSD8) 
+├── 3_NEW_file_seperate.py                    > file list generate (txt) 
+├── dataset.py                                > functions for dataloaders in pytorch
+└── utils
+
+```
+
 
 3. Train the model
 - Available when paper is accepted
