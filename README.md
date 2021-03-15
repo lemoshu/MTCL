@@ -26,10 +26,14 @@ Follow official guidance to install [Pytorch][torch_link].
 git clone https://https://github.com/HiLab-git/SSL4MIS.git 
 cd SSL4MIS
 ```
-2. Download the processed data and put the data in `../data/BraTS2019` or `../data/ACDC`, please read and follow the [README](https://github.com/Luoxd1996/SSL4MIS/tree/master/data/).
+
+2. Preprocess
+- The preprocessing and file separating is a little complicated
+- Available when paper is accepted - I will re-arrange the preprocess and training code after finishing the terribly defeated MS thesis (o_o)
+- Download the testing data (10 cases, h5 files) and put the data in `../data/BraTS2019` or `../data/ACDC`.
 
 3. Train the model
-Available when paper is accepted - I will re-arrange the training code after I finish the burned MS thesis
+- Available when paper is accepted
 ```
 cd code
 python train_unet_2D_MT_IRCAD_concat_CL.py
@@ -37,5 +41,8 @@ python train_unet_2D_MT_IRCAD_concat_CL.py
 
 4. Test the model
 ```
-python test_XXXXX.py
+cd code
+python test_IRCAD_2D_c.py
 ```
+
+
