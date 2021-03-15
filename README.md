@@ -2,7 +2,7 @@
 - Pytorch implementation for our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation.
 - Related paper was submitted to MICCAI 2021, crossed fingers!
 - We will arrange the codes to release if the paper is accepted
-- I will re-arrange the preprocess and training code after finishing the terribly defeated MS thesis (o_o)
+- Will re-arrange the preprocess and training code after finishing my terribly defeated MS thesis (o_o)
 
 ____
 ## Abstract
