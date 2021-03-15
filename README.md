@@ -30,7 +30,6 @@ cd SSL4MIS
 2. Preprocess
 - The preprocessing and file separating is a little complicated
 - Available when paper is accepted - I will re-arrange the preprocess and training code after finishing the terribly defeated MS thesis (o_o)
-- Download the testing data (10 cases, h5 files) and put the data in `../data/BraTS2019` or `../data/ACDC`.
 
 3. Train the model
 - Available when paper is accepted
@@ -40,6 +39,8 @@ python train_unet_2D_MT_IRCAD_concat_CL.py
 ```
 
 4. Test the model
+- Here the processed h5 files (concatenated volumes(img and prob map)) can be used for inference.  
+- Download the testing data (10 cases, h5 files) and put the data in `../data/BraTS2019` or `../data/ACDC`.
 ```
 cd code
 python test_IRCAD_2D_c.py
