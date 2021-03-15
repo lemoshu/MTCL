@@ -39,6 +39,7 @@ dataloaders/
 ├── 2_MSD_data_processing.py                  > Convert processed CT img to h5 file (MSD8)                   
 ├── 2_MSD_Prob_concat.py                      > concatenate the processed img and Sato Prob Map, and convert to h5 file (MSD8) 
 ├── 3_NEW_file_seperate.py                    > file list generate (txt) 
+├── allinone_inference_preprocess.py          > all in one w/o txt list generator 
 ├── dataset.py                                > functions for dataloaders in pytorch
 └── utils
 
