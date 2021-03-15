@@ -89,7 +89,7 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, organ='RO
         image = sitk.GetArrayFromImage(img_itk)
         # change to mask path
         idx = findidx(case)
-        label_file_name = 'hepaticvessel_' + str(idx)[1:]  + '.nii.gz'
+        label_file_name = 'hepaticvessel_' + str(idx)[:]  + '.nii.gz'
         liver_msk_path = os.path.join(msk_baseDir, label_file_name) # liver
         print(liver_msk_path)
         vessel_msk1_path = os.path.join(vessel_msk1_baseDir, label_file_name) # vessel(2) and tumor(2)

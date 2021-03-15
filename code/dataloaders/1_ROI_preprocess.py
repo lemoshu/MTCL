@@ -106,7 +106,7 @@ def ROI_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_msk2_ba
         image = sitk.GetArrayFromImage(img_itk)
         # change to mask path
         idx = findidx(case)
-        label_file_name = 'image_' + str(idx)[1:] + '_gt.nii.gz'
+        label_file_name = 'image_' + str(idx)[:] + '_gt.nii.gz'
         msk_path = os.path.join(msk_baseDir, label_file_name)
         vessel_msk1_path = os.path.join(vessel_msk1_baseDir, label_file_name)
         vessel_msk2_path = os.path.join(vessel_msk2_baseDir, label_file_name)

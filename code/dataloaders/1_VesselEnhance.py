@@ -75,7 +75,7 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
         image = sitk.GetArrayFromImage(img_itk)
         # change to mask path
         idx = findidx(case)
-        label_file_name = 'image_' + str(idx)[1:] + '_gt.nii.gz'
+        label_file_name = 'image_' + str(idx)[:] + '_gt.nii.gz'
         msk_path = os.path.join(msk_baseDir, label_file_name)
         vessel_msk1_path = os.path.join(vessel_msk1_baseDir, label_file_name)
         vessel_msk2_path = os.path.join(vessel_msk2_baseDir, label_file_name)
@@ -137,8 +137,6 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
             vessel_label_itk = sitk.GetImageFromArray(vessel_mask.astype(np.float32))
             vessel_label_itk.SetSpacing(spacing)
             sitk.WriteImage(img_itk, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_NEW/image_ROI/image_{}.nii.gz'.format(str(idx)[1:]))
-            # sitk.WriteImage(label_itk,
-            #                 '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_ROI_{}/image_{}_gt.nii.gz'.format(mode, str(idx)[1:]))
             sitk.WriteImage(vessel_label_itk,
                             '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_NEW/label_vessel_ROI/image_{}_gt.nii.gz'.format(str(idx)[1:]))
     print("Converted val IRCAD volumes to ROI")

@@ -36,7 +36,7 @@ def training_2D_slice_process(train_img_Dir, msk_baseDir, organ):
         # change to mask path, better than the re, sub code
         idx = findidx(case) # ERROR
 
-        label_file_name = 'image_' + str(idx)[1:] + '_gt.nii.gz'
+        label_file_name = 'image_' + str(idx)[:] + '_gt.nii.gz'
         msk_path = os.path.join(msk_baseDir, label_file_name)
         # msk_path = case.replace(".nii.gz", "_gt.nii.gz")
         if os.path.exists(msk_path):
