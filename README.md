@@ -23,8 +23,7 @@ Follow official guidance to install [Pytorch][torch_link].
 
 1. Clone the repo:
 ```
-git clone https://https://github.com/HiLab-git/SSL4MIS.git 
-cd SSL4MIS
+cd MTCL
 ```
 
 2. Preprocess
