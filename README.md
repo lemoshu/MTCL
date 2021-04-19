@@ -25,6 +25,11 @@ Follow official guidance to install [Pytorch][torch_link].
 cd MTCL
 ```
 
+Install the environment
+```
+pip install -r XX.txt
+```
+
 2. Preprocess
 - The preprocessing and file separating is a little complicated
 ```
