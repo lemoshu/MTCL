@@ -1,7 +1,7 @@
 # MTCL-HepaticVesselSeg2D
 - Pytorch implementation for our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation.
-- Related paper was submitted to MICCAI 2021, crossed fingers!
-- We will find free time to re-organize the codes to release if the paper is accepted
+- Related paper was early accepted by MICCAI 2021!
+- We are still working on the extended version of this paper, and will re-organize the codes to release after that.
 
 ____
 ## Abstract
@@ -65,4 +65,14 @@ cd code
 python test_IRCAD_2D_c.py
 ```
 
+## Citation
+If our work is useful to you, please cite our paper as:
+```
+@artical{xu2021noisylabel,
+  title={Noisy Labels are Treasure: Mean-Teacher-Assisted Confident Learning for Hepatic Vessel Segmentation},
+  author={Zhe Xu, Donghuan Lu, Yixin Wang, Jie Luo, Jagadeesan Jayender, Kai Ma, Yefeng Zheng and Xiu Li},
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  year={2021}
+}
+```
 
