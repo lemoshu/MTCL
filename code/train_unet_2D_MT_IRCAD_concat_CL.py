@@ -224,7 +224,7 @@ def hd_loss(seg_soft, gt, seg_dtm, gt_dtm):
     # print('dtm shape:', dtm.shape)
     multipled = torch.mul(delta_s, dtm)
     # print('dtm shape:', multipled.shape)
-    # multipled = torch.einsum('bxy,bxy->bxy', delta_s, dtm) # https://blog.csdn.net/zzq060143/article/details/89107567
+    # multipled = torch.einsum('bxy,bxy->bxy', delta_s, dtm)
     hd_loss = multipled.mean()
 
     return hd_loss
@@ -371,7 +371,6 @@ def train(args, snapshot_path):
 
                 CL_type = args.CL_type
 
-                # have some IndexError in several unknown batches, not sure the reasons. Just pass it.
                 try:
                     if CL_type in ['both', 'Qij']:
                         noise = cleanlab.pruning.get_noise_indices(masks_np_accumulated, preds_softmax_np_accumulated,
