@@ -59,8 +59,7 @@ python train_unet_2D_MT_IRCAD_concat_CL.py
 ```
 
 4. Test the model
-- The processed h5 files (concatenated volumes (img and prob map)) can be used for inference.  
-- Here, our testing data (10 cases, h5 files) in `../data/IRCAD_c` (h5 format) are available.
+- The processed h5 files (concatenated volumes (img and prob map)) can be used for inference. Pls refer to the above preprocessing script.    
 ```
 cd code
 python test_IRCAD_2D_c.py
