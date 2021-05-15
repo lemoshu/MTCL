@@ -1,7 +1,7 @@
 # MTCL-HepaticVesselSeg2D
 - Pytorch implementation for our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation.
 - Related paper was early accepted by MICCAI 2021!
-- We are still working on the extended version of this paper, and will re-organize the codes to release after that.
+- We are still working on the extended version of this paper, and will re-organize the codes after that.
 
 ____
 ## Abstract
