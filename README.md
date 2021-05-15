@@ -30,8 +30,10 @@ Install the environment
 pip install -r XX.txt
 ```
 
-2. Preprocess
-- The preprocessing and file separating is a little complicated
+2. Dataset acquisition and Preprocess scripts
+- Pls refer to 3DIRCADb dataset and MSD8 dataset. Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
+
+- The preprocessing and file separating is a little complicated:
 ```
 dataloaders/
 ├── 1_ROI_preprocess.py                       > Generate processed hepatic CT image for IRCADb                   
@@ -50,8 +52,7 @@ dataloaders/
 ```
 
 
-3. Train the model
-- Available when paper is accepted
+3. Training script
 ```
 cd code
 python train_unet_2D_MT_IRCAD_concat_CL.py
