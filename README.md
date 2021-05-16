@@ -31,7 +31,7 @@ pip install -r XX.txt
 ```
 
 2. Dataset acquisition and Preprocess scripts
-- For the dataset, you can refer to 3DIRCADb and Medical Segmentation Decathlon (Task 8). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
+- For the dataset, please refer to 3DIRCADb and Medical Segmentation Decathlon (Task 8). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
 
 - The preprocessing and file separating is a little complicated:
 ```
