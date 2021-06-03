@@ -205,7 +205,6 @@ if __name__ == '__main__':
     if mode == 'per_case':
         metric = Inference(FLAGS)
         print('Dice, HD95:', metric)
-        # print((metric[0]+metric[1]+metric[2])/3)
 
     elif mode == 'whole':
         metric = Inference_whole(FLAGS)
