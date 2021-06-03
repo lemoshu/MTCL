@@ -57,7 +57,7 @@ cd code
 python train_unet_2D_MT_IRCAD_concat_CL.py
 ```
 
-4. Test the model
+4. Test script
 - The processed h5 files (concatenated volumes (img and prob map)) should be used for inference. Pls refer to the above preprocessing script.    
 ```
 cd code
