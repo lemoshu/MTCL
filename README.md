@@ -31,9 +31,9 @@ pip install -r XX.txt
 ```
 
 2. Dataset acquisition and Preprocess scripts
-- For the dataset, please refer to 3DIRCADb and Medical Segmentation Decathlon (Task 8). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
+- For the dataset, please refer to [3DIRCADb](https://www.ircad.fr/research/3d-ircadb-01/) and [Medical Segmentation Decathlon (Task 8)](http://medicaldecathlon.com/). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
 
-- The preprocessing and file separating is a little complicated:
+- The preprocessing undergoes masking, ROI cropping, normalization and Sato-based vessel prob map generation. We convert the data into .h5 format. Pls refer to the following scripts:
 ```
 dataloaders/
 ├── 1_ROI_preprocess.py                       > Generate processed hepatic CT image for IRCADb                   
@@ -59,7 +59,7 @@ python train_unet_2D_MT_IRCAD_concat_CL.py
 ```
 
 4. Test the model
-- The processed h5 files (concatenated volumes (img and prob map)) can be used for inference. Pls refer to the above preprocessing script.    
+- The processed h5 files (concatenated volumes (img and prob map)) should be used for inference. Pls refer to the above preprocessing script.    
 ```
 cd code
 python test_IRCAD_2D_c.py
