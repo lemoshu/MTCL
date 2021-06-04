@@ -193,24 +193,6 @@ if __name__=='__main__':
     organ = 'ROI'
 
     ## crop ROI region
-    # train process
     ROI_crop_preprocess(train_img_Dir, ROI_baseDir, vessel_msk1_baseDir, organ)
-
-
-    ## test
-    # file_path = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_liver/image_12_gt.nii.gz'
-    # nii_initial = nib.load(file_path)
-    # nii_data = nii_initial.get_data()
-    # # nii_data_p = CT_normalize(nii_data)
-    # maxvalue = np.max(nii_data)
-    # nii_data[nii_data==255] = 0
-    # print(np.max(nii_data))
-    #
-    # img = nib.Nifti1Image(nii_data, nii_initial.affine)
-    # nib.save(img, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/preprocess_test/image_12_gt.nii.gz')
-
-    ## single case process seperately (case 16)
-    # problem_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/problem_img/*.nii.gz'
-    # ROI_crop_preprocess(problem_img_Dir, ROI_baseDir, vessel_msk1_baseDir, vessel_msk2_baseDir, organ)
 
 
