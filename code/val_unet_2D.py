@@ -44,8 +44,8 @@ def test_single_concat_volume(image, label, net, classes):
     image, label = image.squeeze(0).cpu().detach().numpy(), label.squeeze(0).cpu().detach().numpy() #unsqueeze to remove the batch size axis
     prediction = np.zeros_like(label)
     for ind in range(int(image.shape[0]/2)):
-        slice = image[ind, :, :] # from [0,115), assume that total slices for one img volume is 115
-        prob_slice = image[int(image.shape[0]/2)+ind, :, :] # from [115, 230)
+        slice = image[ind, :, :] 
+        prob_slice = image[int(image.shape[0]/2)+ind, :, :]
         img = np.expand_dims(slice, axis=0)
         prob_ = np.expand_dims(prob_slice, axis=0)
         concat_input = np.concatenate((img, prob_), axis=0) # (2, H, W)
