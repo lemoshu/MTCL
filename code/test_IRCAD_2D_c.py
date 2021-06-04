@@ -71,8 +71,8 @@ def test_single_concat_volume(case, net, test_save_path, post_process=False):
     label = h5f['label_ROI'][:]
     prediction = np.zeros_like(label)
     for ind in range(int(image.shape[0]/2)):
-        slice = image[ind, :, :] # assume that total slices for one img volume is 115, img is from from [0,115)
-        prob_slice = image[int(image.shape[0]/2)+ind, :, :] # prob map is from [115, 230)
+        slice = image[ind, :, :]
+        prob_slice = image[int(image.shape[0]/2)+ind, :, :]
         img = np.expand_dims(slice, axis=0)
         prob_ = np.expand_dims(prob_slice, axis=0)
         concat_input = np.concatenate((img, prob_), axis=0) # (2, H, W)
