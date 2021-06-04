@@ -1,5 +1,6 @@
 # MTCL-HepaticVesselSeg2D
-- Pytorch implementation for our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation. Related [paper](https://arxiv.org/abs/2106.01860) was early accepted by MICCAI'21.  
+- Pytorch implementation for our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation.   
+- Related [paper](https://arxiv.org/abs/2106.01860) was early accepted by MICCAI'21.   
 - We are still working on the extended version of this paper, and will re-organize the codes after that.
 
 ____
@@ -11,7 +12,7 @@ ____
 Some important required packages include:
 * [Pytorch][torch_link] version >=0.4.1.
 * Python == 3.6 
-* Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy ......
+* Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy, etc. Please check the package list.
 
 Follow official guidance to install [Pytorch][torch_link].
 
@@ -24,12 +25,7 @@ Follow official guidance to install [Pytorch][torch_link].
 cd MTCL
 ```
 
-Install the environment
-```
-pip install -r XX.txt
-```
-
-2. Dataset acquisition and Preprocess scripts
+2. Dataset acquisition and Preprocessing scripts
 - For the dataset, please refer to [3DIRCADb](https://www.ircad.fr/research/3d-ircadb-01/) and [Medical Segmentation Decathlon (Task 8)](http://medicaldecathlon.com/). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
 
 - After acquiring the datasets, you can refer to the following preprocessing scripts. The preprocessing undergoes masking, ROI cropping, normalization and Sato-based vessel prob map generation. In practice, we processed the data into h5 format.  
