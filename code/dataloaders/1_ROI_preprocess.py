@@ -20,38 +20,6 @@ from skimage.measure import label
 from skimage.measure import regionprops
 
 
-# Image Resampling
-def Resampling(img, label = False):
-    # note: img is itk format
-    original_size = img.GetSize() #获取图像原始尺寸
-    original_spacing = img.GetSpacing() #获取图像原始分辨率
-    new_spacing = [1, 1, 1] #设置图像新的分辨率为1*1*1
-
-    resample = sitk.ResampleImageFilter() #初始化
-    resample.SetOutputSpacing(new_spacing)
-    resample.SetOutputOrigin(img.GetOrigin())
-    resample.SetOutputDirection(img.GetDirection())
-    resample.SetDefaultPixelValue(0)
-
-    new_size = [512, 512,
-        # int(round(original_size[0] * (original_spacing[0] / 1))),
-        #         int(round(original_size[1] * (original_spacing[1] / 1))),
-                int(round(original_size[2] * (original_spacing[2] / 1)))] #计算图像在新的分辨率下尺寸大小
-    resample.SetSize(new_size)
-    if label == False:
-        resample.SetInterpolator(sitk.sitkBSpline)
-        Resampleimage = resample.Execute(img)
-        # ResampleimageArray = sitk.GetArrayFromImage(Resampleimage)
-        # ResampleimageArray[ResampleimageArray < 0] = 0 #将图中小于0的元素置为0
-
-    else:
-        # for label, should use sitk.sitkLinear to make sure the original and resampled label are the same! So use linear
-        resample.SetInterpolator(sitk.sitkLinear)
-        Resampleimage = resample.Execute(img)
-        # ResampleimageArray = sitk.GetArrayFromImage(Resampleimage)
-
-    return Resampleimage, new_spacing
-
 def findidx(file_name):
     # find the idx
     cop = re.compile("[^0-9]")
@@ -100,10 +68,8 @@ def ROI_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_msk2_ba
         # origin = img_itk.GetOrigin()
         spacing = img_itk.GetSpacing()
         # direction = img_itk.GetDirection()
-
-        # Resampling the img to 1x1x1
-        # img_itk, new_spacing = Resampling(img_itk, label=False)
         image = sitk.GetArrayFromImage(img_itk)
+        
         # change to mask path
         idx = findidx(case)
         label_file_name = 'image_' + str(idx)[:] + '_gt.nii.gz'
@@ -114,18 +80,12 @@ def ROI_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_msk2_ba
         if os.path.exists(msk_path):
             print(msk_path)
             msk_itk = sitk.ReadImage(msk_path)
-            # resampling label
-            # msk_itk, new_spacing = Resampling(msk_itk, label=True)
             mask = sitk.GetArrayFromImage(msk_itk) / 255
 
             vesselmsk1_itk = sitk.ReadImage(vessel_msk1_path)
-            #resampling label
-            # vesselmsk1_itk, new_spacing = Resampling(vesselmsk1_itk, label=True)
             vessel_mask1 = sitk.GetArrayFromImage(vesselmsk1_itk) / 255
 
             vesselmsk2_itk = sitk.ReadImage(vessel_msk2_path)
-            # resampling label
-            # vesselmsk2_itk, new_spacing = Resampling(vesselmsk2_itk, label=True)
             vessel_mask2 = sitk.GetArrayFromImage(vesselmsk2_itk) / 255
             # combine two vessel labels
             vessel_mask = combine_vessel_mask(vessel_mask1, vessel_mask2)
@@ -156,8 +116,6 @@ def ROI_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_msk2_ba
             vessel_label_itk = sitk.GetImageFromArray(vessel_mask.astype(np.float32))
             vessel_label_itk.SetSpacing(spacing)
             sitk.WriteImage(img_itk, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/image_ROI_{}/image_{}.nii.gz'.format(mode, str(idx)[1:]))
-            # sitk.WriteImage(label_itk,
-            #                 '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_ROI_{}/image_{}_gt.nii.gz'.format(mode, str(idx)[1:]))
             sitk.WriteImage(vessel_label_itk,
                             '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_vessel_ROI/image_{}_gt.nii.gz'.format(str(idx)[1:]))
     print("Converted val IRCAD volumes to ROI")
@@ -171,9 +129,6 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
         # origin = img_itk.GetOrigin()
         spacing = img_itk.GetSpacing()
         # direction = img_itk.GetDirection()
-
-        # Resampling the img to 1x1x1
-        # img_itk, new_spacing = Resampling(img_itk, label=False)
         image = sitk.GetArrayFromImage(img_itk)
         # change to mask path
         idx = findidx(case)
@@ -185,8 +140,6 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
         if os.path.exists(msk_path):
             print(msk_path)
             msk_itk = sitk.ReadImage(msk_path)
-            # resampling label
-            # msk_itk, new_spacing = Resampling(msk_itk, label=True)
             mask_ = sitk.GetArrayFromImage(msk_itk)
             if np.max(mask_) == 255: # fix the bug that some labels are valued 1 not 255
                 mask = mask_ / 255 #fix the bug that did not find the region using normalized masks
@@ -194,15 +147,11 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
                 mask = mask_
 
             vesselmsk1_itk = sitk.ReadImage(vessel_msk1_path)
-            #resampling label
-            # vesselmsk1_itk, new_spacing = Resampling(vesselmsk1_itk, label=True)
             vessel_mask1 = sitk.GetArrayFromImage(vesselmsk1_itk)
             if np.max(vessel_mask1) == 255:
                 vessel_mask1 = vessel_mask1 / 255
 
             vesselmsk2_itk = sitk.ReadImage(vessel_msk2_path)
-            # resampling label
-            # vesselmsk2_itk, new_spacing = Resampling(vesselmsk2_itk, label=True)
             vessel_mask2 = sitk.GetArrayFromImage(vesselmsk2_itk)
             if np.max(vessel_mask2) == 255:
                 vessel_mask2 = vessel_mask2 / 255
@@ -243,8 +192,6 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
             vessel_label_itk = sitk.GetImageFromArray(vessel_mask.astype(np.float32))
             vessel_label_itk.SetSpacing(spacing)
             sitk.WriteImage(img_itk, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_c/image_ROI_{}_ori/image_{}.nii.gz'.format(mode, str(idx)[1:]))
-            # sitk.WriteImage(label_itk,
-            #                 '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_ROI_{}/image_{}_gt.nii.gz'.format(mode, str(idx)[1:]))
             sitk.WriteImage(vessel_label_itk,
                             '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_c/label_vessel_ROI/image_{}_gt.nii.gz'.format(str(idx)[1:]))
     print("Converted val IRCAD volumes to ROI")
@@ -259,8 +206,6 @@ def ROI_crop_preprocess_nosplit(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, v
         spacing = img_itk.GetSpacing()
         # direction = img_itk.GetDirection()
 
-        # Resampling the img to 1x1x1
-        # img_itk, new_spacing = Resampling(img_itk, label=False)
         image = sitk.GetArrayFromImage(img_itk)
         # change to mask path
         idx = findidx(case)
@@ -272,8 +217,6 @@ def ROI_crop_preprocess_nosplit(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, v
         if os.path.exists(msk_path):
             print(msk_path)
             msk_itk = sitk.ReadImage(msk_path)
-            # resampling label
-            # msk_itk, new_spacing = Resampling(msk_itk, label=True)
             mask_ = sitk.GetArrayFromImage(msk_itk)
             if np.max(mask_) == 255: # fix the bug that some labels are valued 1 not 255
                 mask = mask_ / 255 #fix the bug that did not find the region using normalized masks
@@ -281,15 +224,11 @@ def ROI_crop_preprocess_nosplit(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, v
                 mask = mask_
 
             vesselmsk1_itk = sitk.ReadImage(vessel_msk1_path)
-            #resampling label
-            # vesselmsk1_itk, new_spacing = Resampling(vesselmsk1_itk, label=True)
             vessel_mask1 = sitk.GetArrayFromImage(vesselmsk1_itk)
             if np.max(vessel_mask1) == 255:
                 vessel_mask1 = vessel_mask1 / 255
 
             vesselmsk2_itk = sitk.ReadImage(vessel_msk2_path)
-            # resampling label
-            # vesselmsk2_itk, new_spacing = Resampling(vesselmsk2_itk, label=True)
             vessel_mask2 = sitk.GetArrayFromImage(vesselmsk2_itk)
             if np.max(vessel_mask2) == 255:
                 vessel_mask2 = vessel_mask2 / 255
@@ -330,8 +269,6 @@ def ROI_crop_preprocess_nosplit(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, v
             vessel_label_itk = sitk.GetImageFromArray(vessel_mask.astype(np.float32))
             vessel_label_itk.SetSpacing(spacing)
             sitk.WriteImage(img_itk, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_c/image_ROI_ori/image_{}.nii.gz'.format(str(idx)[1:]))
-            # sitk.WriteImage(label_itk,
-            #                 '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_ROI_{}/image_{}_gt.nii.gz'.format(mode, str(idx)[1:]))
             sitk.WriteImage(vessel_label_itk,
                             '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_c/label_vessel_ROI/image_{}_gt.nii.gz'.format(str(idx)[1:]))
     print("Converted val IRCAD volumes to ROI")
@@ -414,17 +351,6 @@ if __name__=='__main__':
     # # test process
     # ROI_crop_preprocess(test_img_Dir, ROI_baseDir, vessel_msk1_baseDir, vessel_msk2_baseDir, organ, mode='test')
 
-    ## test
-    # file_path = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_liver/image_12_gt.nii.gz'
-    # nii_initial = nib.load(file_path)
-    # nii_data = nii_initial.get_data()
-    # # nii_data_p = CT_normalize(nii_data)
-    # maxvalue = np.max(nii_data)
-    # nii_data[nii_data==255] = 0
-    # print(np.max(nii_data))
-    #
-    # img = nib.Nifti1Image(nii_data, nii_initial.affine)
-    # nib.save(img, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/preprocess_test/image_12_gt.nii.gz')
 
     # preprocess all cases
     all_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/image/*.nii.gz'
