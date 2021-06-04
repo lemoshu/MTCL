@@ -72,4 +72,4 @@ If our work brings some insights to you, please cite our paper as:
 ```
 
 ## Acknowledgement
-The training and test scripts are partly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).  
+The training and test scripts are partly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).      
