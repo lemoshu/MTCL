@@ -1,9 +1,5 @@
 """
 Sato: https://www.kite.com/python/docs/skimage.filters.sato
-
-We should use the 'vessel' environment as the skimage should be 0.18.1
-
-
 """
 
 import glob
@@ -202,68 +198,3 @@ if __name__=='__main__':
     # problem_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/problem_img/*.nii.gz'
     # ROI_crop_preprocess(problem_img_Dir, ROI_baseDir, vessel_msk1_baseDir, vessel_msk2_baseDir, organ, mode='val')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-Filter an image with the Sato tubeness filter.
-
-This filter can be used to detect continuous ridges, e.g. tubes,
-wrinkles, rivers. It can be used to calculate the fraction of the
-whole image containing such objects.
-
-Defined only for 2-D and 3-D images. Calculates the eigenvectors of the
-Hessian to compute the similarity of an image region to tubes, according to
-the method described in [1]_.
-
-Parameters
-----------
-image : (N, M[, P]) ndarray
-    Array with input image data.
-sigmas : iterable of floats, optional
-    Sigmas used as scales of filter.
-black_ridges : boolean, optional
-    When True (the default), the filter detects black ridges; when
-    False, it detects white ridges.
-
-Returns
--------
-out : (N, M[, P]) ndarray
-    Filtered image (maximum of pixels across all scales).
-
-References
-----------
-.. [1] Sato, Y., Nakajima, S., Shiraga, N., Atsumi, H., Yoshida, S.,
-    Koller, T., ..., Kikinis, R. (1998). Three-dimensional multi-scale line
-    filter for segmentation and visualization of curvilinear structures in
-    medical images. Medical image analysis, 2(2), 143-168.
-    :DOI:`10.1016/S1361-8415(98)80009-1`
-    
-    
-
-
-"""
