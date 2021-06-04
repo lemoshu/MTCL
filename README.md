@@ -65,7 +65,7 @@ python test_IRCAD_2D_c.py
 ```
 
 ## Citation
-If our work is useful to you, please cite our paper as:
+If our work brings some insights to you, please cite our paper as:
 ```
 @artical{xu2021noisylabel,
   title={Noisy Labels are Treasure: Mean-Teacher-Assisted Confident Learning for Hepatic Vessel Segmentation},
