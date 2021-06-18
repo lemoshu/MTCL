@@ -1,7 +1,6 @@
 # MTCL-HepaticVesselSeg2D
-- Implementation of our Mean-Teacher-Assisted Confident Learning (MTCL) for hepatic vessel segmentation (2D ver).     
-- Related [paper](https://arxiv.org/abs/2106.01860) was early accepted by MICCAI'21.   
-- We are still working on the extended journal version, and will re-organize the codes after that.
+- Implementation of our [paper](https://arxiv.org/abs/2106.01860) "Noisy Labels are Treasure: Mean-Teacher-Assisted Confident Learning for Hepatic Vessel Segmentation" (2D version, early accepted by MICCAI'21).    
+- We are still working on the extended journal version and will re-organize the codes after that.  
 
 ____
 ## Abstract
