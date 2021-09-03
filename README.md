@@ -27,7 +27,7 @@ cd MTCL
 2. Dataset acquisition and Preprocessing scripts
 - For the dataset, please refer to [3DIRCADb](https://www.ircad.fr/research/3d-ircadb-01/) and [Medical Segmentation Decathlon (Task 8)](http://medicaldecathlon.com/). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
 
-- After acquiring the datasets, you can refer to the following preprocessing scripts. The preprocessing undergoes ROI masking, cropping, normalization, Sato-based vessel prob map generation, etc. In practice, we processed the data into h5 format, some "bad cases" undergoes some special treatment. We plan to release the preprocessed data after accomplishing the journal version. Stay tuned!  
+- After acquiring the datasets, you can refer to the following preprocessing scripts. The preprocessing undergoes ROI masking, cropping, normalization, Sato-based vessel prob map generation, etc. In practice, we processed the data into h5 format, some "bad cases" undergoes some special treatment. We plan to release the preprocessed data after accomplishing the journal version. Under such preprocessing, the u-net 2D only can provide average 0.6685 Dice (tried our best but should be further improved). Other advanced preprocessing is welcomed to discuss. Stay tuned!  
 ```
 dataloaders/
 ├── 1_ROI_preprocess.py                       > Generate processed hepatic CT image for IRCADb                   
@@ -53,7 +53,7 @@ python train_unet_2D_MT_IRCAD_concat_CL.py
 ```
 
 4. Test script
-- The processed h5 files (concatenated volumes (img and prob map)) should be used for inference. Pls refer to the above preprocessing script.    
+- The processed h5 files (concatenated volumes (img and prob map)) should be used for inference. We split img 2,8,3,10,16,19,12,5,7,14 for testing.    
 ```
 cd code
 python test_IRCAD_2D_c.py
