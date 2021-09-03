@@ -1,6 +1,6 @@
 # MTCL-HepaticVesselSeg2D
 - Implementation of our [paper](https://arxiv.org/abs/2106.01860) "Noisy Labels are Treasure: Mean-Teacher-Assisted Confident Learning for Hepatic Vessel Segmentation" (2D version, early accepted by MICCAI'21).    
-- We are still working on the extended journal version and will re-organize the codes after that.  
+- We are still working on the extended journal version which will also not limit to vessel seg task, and will re-organize the codes after that. The preprocessing is very complicated, and some human effort are also made for rectify some "bad" samples in our experiments. We plan to release the preprocessed data after accomplishing the journal version. Stay tuned!
 
 ____
 ## Abstract
@@ -27,7 +27,7 @@ cd MTCL
 2. Dataset acquisition and Preprocessing scripts
 - For the dataset, please refer to [3DIRCADb](https://www.ircad.fr/research/3d-ircadb-01/) and [Medical Segmentation Decathlon (Task 8)](http://medicaldecathlon.com/). Note that we combine the masks of portalvein and venacava for IRCADb dataset, and the liver masks of MSD8 are obtained from the publicly available trained [H-DenseUNet model](https://github.com/xmengli999/H-DenseUNet). Thanks for their nice work.  
 
-- After acquiring the datasets, you can refer to the following preprocessing scripts. The preprocessing undergoes ROI masking, cropping, normalization, Sato-based vessel prob map generation, etc. In practice, we processed the data into h5 format.  
+- After acquiring the datasets, you can refer to the following preprocessing scripts. The preprocessing undergoes ROI masking, cropping, normalization, Sato-based vessel prob map generation, etc. In practice, we processed the data into h5 format, some "bad cases" undergoes some special treatment. We plan to release the preprocessed data after accomplishing the journal version. Stay tuned!  
 ```
 dataloaders/
 ├── 1_ROI_preprocess.py                       > Generate processed hepatic CT image for IRCADb                   
@@ -71,4 +71,4 @@ If our work brings some insights to you, please cite our paper as:
 ```
 
 ## Acknowledgement
-The training and test scripts are partly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).      
+The backbone, training and test scripts are partly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).      
