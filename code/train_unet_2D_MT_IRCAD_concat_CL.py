@@ -232,7 +232,7 @@ def hd_loss(seg_soft, gt, seg_dtm, gt_dtm):
 
 def labeled_slices(dataset, patiens_num):
     ref_dict = None
-    if "IRCAD" in dataset:  # 1-1298 are IRCAD, others are MSD
+    if "IRCAD" in dataset:  # 1-1298 are IRCAD slices, others are MSD slices
         ref_dict = {"10": 1298}
     else:
         print("Error")
@@ -360,12 +360,8 @@ def train(args, snapshot_path):
                 preds_softmax_np_accumulated = np.swapaxes(preds_softmax_np_accumulated, 2, 3)
                 preds_softmax_np_accumulated = preds_softmax_np_accumulated.reshape(-1, num_classes)
                 preds_softmax_np_accumulated = np.ascontiguousarray(preds_softmax_np_accumulated)
-                # print('(After_Reshape)Shape of preds_softmax_np_accumulated:', preds_softmax_np_accumulated.shape)
 
                 masks_np_accumulated = masks_np.reshape(-1).astype(np.uint8)
-                # print('(After_Reshape)Shape of masks_np_accumulated:', masks_np_accumulated.shape)
-
-                # preds_softmax_np_accumulated[np.isnan(preds_softmax_np_accumulated)] = 0
 
                 assert masks_np_accumulated.shape[0] == preds_softmax_np_accumulated.shape[0]
 
@@ -381,10 +377,6 @@ def train(args, snapshot_path):
                                                                    n_jobs=1)
 
                     confident_maps_np = noise.reshape(-1, 320, 320).astype(np.uint8)  # (bs, 320, 320)
-                    # # Check the dimension
-                    # print('Shape of Noise:', noise.shape)
-                    # print('Number of estimated errors in training set:', sum(noise))
-                    # print('Shape of confident_maps_np:', confident_maps_np.shape)
 
                     # Correct the label
                     correct_type = 'smooth'
