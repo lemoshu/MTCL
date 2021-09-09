@@ -1,5 +1,4 @@
 """
-@author: Zhe XU
 Training code for MTCL(c)
 """
 
