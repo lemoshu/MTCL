@@ -223,7 +223,6 @@ def hd_loss(seg_soft, gt, seg_dtm, gt_dtm):
     # print('dtm shape:', dtm.shape)
     multipled = torch.mul(delta_s, dtm)
     # print('dtm shape:', multipled.shape)
-    # multipled = torch.einsum('bxy,bxy->bxy', delta_s, dtm)
     hd_loss = multipled.mean()
 
     return hd_loss
@@ -394,7 +393,13 @@ def train(args, snapshot_path):
                     supervised_loss = supervised_loss + 0.5 * (loss_ce_weak + loss_focal_weak)
 
                     # Iterative Update the Noisy GT
-                    label_batch[args.labeled_bs:] = noisy_label_batch
+                    loop_type = 'hardloop'
+                    if loop_type == 'smoothloop':
+                        label_batch[args.labeled_bs:] = noisy_label_batch
+                    else:
+                        hard_correct_masks_np = masks_np + confident_maps_np * np.power(-1, masks_np)
+                        hard_correct_masks = torch.from_numpy(hard_correct_masks_np).cuda(outputs_soft.device.index)
+                        label_batch[args.labeled_bs:] = hard_correct_masks
 
                 except Exception as e:
                     loss_ce_weak = loss_ce_weak
