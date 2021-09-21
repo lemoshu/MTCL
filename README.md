@@ -1,6 +1,6 @@
 # MTCL-HepaticVesselSeg2D
 - Implementation of our [paper](https://arxiv.org/abs/2106.01860) "Noisy Labels are Treasure: Mean-Teacher-Assisted Confident Learning for Hepatic Vessel Segmentation" (2D version, early accepted by MICCAI'21).    
-- [Note] we are still working on the extended journal version which will not limit to vessel seg task. Note that the preprocessing is a little complicated, apart from below preprocessing, human effort are further made to rectify some "bad" samples to alleviate the terrible "domain shift". The h5-format preprocessed vessel seg data will be available after final journal publication. Code will be further re-organized. Stay tuned!
+- [Note] Code will be further re-organized. we are working on the extended journal version which will include 3D implementation and other datasets. Here note that the hepatic vessel preprocessing is complicated, apart from below preprocessing, human effort are further made to rectify some "bad" samples to alleviate the terrible "domain shift". The h5-format preprocessed vessel seg data will be available after journal publication. Stay tuned!
 ____
 ## Abstract
 Manually segmenting the hepatic vessels from Computer Tomography (CT) is far more expertise-demanding and laborious than other structures due to the low-contrast and complex morphology of vessels, resulting in the extreme lack of high-quality labeled data. Without sufficient high-quality annotations, the usual data-driven learning-based approaches struggle with deficient training. On the other hand, directly introducing additional data with low-quality annotations may confuse the network, leading to undesirable performance degradation. To address this issue, we propose a novel mean-teacher-assisted confident learning framework to robustly exploit the noisy labeled data for the challenging hepatic vessel segmentation task. Specifically, with the adapted confident learning assisted by a third party, i.e., the weight-averaged teacher model, the noisy labels in the additional low-quality dataset can be transformed from ‘encumbrance’ to ‘treasure’ via progressive pixel-wise soft-correction, thus providing productive guidance.
@@ -52,7 +52,7 @@ python train_unet_2D_MT_IRCAD_concat_CL.py
 ```
 
 4. Test script
-- The processed h5 files (concatenated volumes (img and prob map)) should be used for inference. We split img 2,8,3,10,16,19,12,5,7,14 for testing.    
+- The processed h5 files (concatenated volumes (img and prob map)) should be used for inference.    
 ```
 cd code
 python test_IRCAD_2D_c.py
