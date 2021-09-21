@@ -389,7 +389,6 @@ def train(args, snapshot_path):
                     # print('Shape of noisy_label_batch:', noisy_label_batch.shape)
                     loss_ce_weak = ce_loss(outputs[args.labeled_bs:], noisy_label_batch.long())
                     loss_focal_weak = focal_loss(outputs[args.labeled_bs:], noisy_label_batch.long())
-
                     supervised_loss = supervised_loss + 0.5 * (loss_ce_weak + loss_focal_weak)
 
                 except Exception as e:
