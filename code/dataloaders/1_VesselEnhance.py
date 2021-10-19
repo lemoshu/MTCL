@@ -132,9 +132,9 @@ def ROI_crop_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDir, vessel_ms
             label_itk.SetSpacing(spacing)
             vessel_label_itk = sitk.GetImageFromArray(vessel_mask.astype(np.float32))
             vessel_label_itk.SetSpacing(spacing)
-            sitk.WriteImage(img_itk, '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_NEW/image_ROI/image_{}.nii.gz'.format(str(idx)[1:]))
+            sitk.WriteImage(img_itk, '../../data/IRCAD_NEW/image_ROI/image_{}.nii.gz'.format(str(idx)[1:]))
             sitk.WriteImage(vessel_label_itk,
-                            '/home/xuzhe/Segment/SSL4MIS/data/IRCAD_NEW/label_vessel_ROI/image_{}_gt.nii.gz'.format(str(idx)[1:]))
+                            '../../data/IRCAD_NEW/label_vessel_ROI/image_{}_gt.nii.gz'.format(str(idx)[1:]))
     print("Converted val IRCAD volumes to ROI")
 
 
@@ -169,18 +169,18 @@ if __name__=='__main__':
 
     os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
-    train_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/train_image/*.nii.gz'
-    val_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/val_image/*.nii.gz'
-    test_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/test_image/*.nii.gz'
+    train_img_Dir = '../../data/IRCAD/train_image/*.nii.gz'
+    val_img_Dir = '../../data/IRCAD/val_image/*.nii.gz'
+    test_img_Dir = '../../data/IRCAD/test_image/*.nii.gz'
 
     # liver
-    ROI_baseDir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_liver/'
-    vessel_msk1_baseDir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_venacava/'
-    vessel_msk2_baseDir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/label_portalvein/'
+    ROI_baseDir = '../../data/IRCAD/label_liver/'
+    vessel_msk1_baseDir = '../../data/IRCAD/label_venacava/'
+    vessel_msk2_baseDir = '../../data/IRCAD/label_portalvein/'
     organ = 'vessel'
 
     # single case process seperately
-    all_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/image/*.nii.gz'
+    all_img_Dir = '../../data/IRCAD/image/*.nii.gz'
     ROI_crop_preprocess(all_img_Dir, ROI_baseDir, vessel_msk1_baseDir, vessel_msk2_baseDir)
 
 
@@ -195,6 +195,6 @@ if __name__=='__main__':
     # ROI_crop_preprocess(test_img_Dir, ROI_baseDir, vessel_msk1_baseDir, vessel_msk2_baseDir, organ, mode='test')
 
     ## single case process seperately (case 16)
-    # problem_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/IRCAD/problem_img/*.nii.gz'
+    # problem_img_Dir = '../../data/IRCAD/problem_img/*.nii.gz'
     # ROI_crop_preprocess(problem_img_Dir, ROI_baseDir, vessel_msk1_baseDir, vessel_msk2_baseDir, organ, mode='val')
 
