@@ -176,7 +176,7 @@ if __name__=='__main__':
 
     os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
-    train_img_Dir = '/home/xuzhe/Segment/SSL4MIS/data/MSD/imagesTr/*.nii.gz'
+    train_img_Dir = '../../data/MSD/imagesTr/*.nii.gz'
 
     #
     # training_2D_slice_process(train_img_Dir, msk_baseDir, organ)
@@ -188,8 +188,8 @@ if __name__=='__main__':
     # test_volume_process(test_img_Dir, msk_baseDir, organ)
 
     # liver
-    ROI_baseDir = '/home/xuzhe/Segment/SSL4MIS/data/MSD/imagesTr_Seg/'
-    vessel_msk1_baseDir = '/home/xuzhe/Segment/SSL4MIS/data/MSD/labelsTr/'
+    ROI_baseDir = '../../data/MSD/imagesTr_Seg/'
+    vessel_msk1_baseDir = '../../data/MSD/labelsTr/'
     organ = 'ROI'
 
     ## crop ROI region
