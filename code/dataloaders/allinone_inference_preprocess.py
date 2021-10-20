@@ -117,8 +117,7 @@ def ROI_crop_sato_concat_preprocess(val_img_Dir, msk_baseDir, vessel_msk1_baseDi
         # origin = img_itk.GetOrigin()
         spacing = img_itk.GetSpacing()
         # direction = img_itk.GetDirection()
-
-        # Resampling the img to 1x1x1
+        
         # img_itk, new_spacing = Resampling(img_itk, label=False)
         image = sitk.GetArrayFromImage(img_itk)
         # change to mask path
