@@ -1,13 +1,10 @@
-"""
-Training code for MTCL(c)
-"""
-
 import argparse
 import logging
 import os
 import random
 import shutil
 import sys
+import math
 import time
 
 import numpy as np
@@ -25,7 +22,7 @@ from torchvision.utils import make_grid
 from tqdm import tqdm
 
 from dataloaders import utils
-from dataloaders.dataset import (BaseDataSets_IRCAD_SSL_concat, RandomGenerator_IRCAD_concat,
+from dataloaders.dataset import (BaseDataSets_IRCAD_SSL_concat_recon, RandomGenerator_IRCAD_concat,
                                  TwoStreamBatchSampler)
 from networks.net_factory import net_factory
 from utils import losses, metrics, ramps
@@ -35,18 +32,18 @@ from val_unet_2D import test_single_concat_volume
 from scipy.ndimage import distance_transform_edt as distance
 from skimage import segmentation as skimage_seg
 
-# Confident Learning module
+# CL
 import cleanlab
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
                     default='../data/IRCAD_c', help='Name of Experiment')
 parser.add_argument('--exp', type=str,
-                    default='IRCAD_c/MTCL_c', help='experiment_name')
+                    default='IRCAD_c/MTCL_UDS', help='experiment_name')
 parser.add_argument('--model', type=str,
                     default='unet', help='model_name')
 parser.add_argument('--max_iterations', type=int,
-                    default=40000, help='maximum epoch number to train')
+                    default=30000, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int, default=4,
                     help='batch_size per gpu')
 parser.add_argument('--deterministic', type=int, default=1,
@@ -75,11 +72,13 @@ parser.add_argument('--consistency', type=float,
 parser.add_argument('--consistency_rampup', type=float,
                     default=200.0, help='consistency_rampup')
 # pretrain
-parser.add_argument('--pretrain_model', type=str, default=None, help='pretrained model')
+parser.add_argument('--pretrain_model', type=str, default=None, help='pretrained model') 
 
 # CL
 parser.add_argument('--CL_type', type=str,
                     default='both', help='CL implement type')
+parser.add_argument('--weak_weight', type=float,
+                    default=5.0, help='weak_weight')
 args = parser.parse_args()
 
 
@@ -94,10 +93,9 @@ def compute_dtm01(img_gt, out_shape):
              0; x out of segmentation
     normalize sdf to [0, 1]
     """
-
     normalized_dtm = np.zeros(out_shape)
 
-    for b in range(out_shape[0]):  # batch size
+    for b in range(out_shape[0]): 
         # ignore background
         for c in range(1, out_shape[1]):
             posmask = img_gt[b].astype(np.bool)
@@ -119,7 +117,7 @@ def compute_dtm(img_gt, out_shape):
 
     fg_dtm = np.zeros(out_shape)
 
-    for b in range(out_shape[0]):  # batch size
+    for b in range(out_shape[0]):
         for c in range(1, out_shape[1]):
             posmask = img_gt[b].astype(np.bool)
             if posmask.any():
@@ -144,7 +142,7 @@ def compute_sdf1_1(img_gt, out_shape):
 
     normalized_sdf = np.zeros(out_shape)
 
-    for b in range(out_shape[0]):  # batch size
+    for b in range(out_shape[0]):
         # ignore background
         for c in range(1, out_shape[1]):
             posmask = img_gt[b].astype(np.bool)
@@ -157,7 +155,6 @@ def compute_sdf1_1(img_gt, out_shape):
                             np.max(posdis) - np.min(posdis))
                 sdf[boundary == 1] = 0
                 normalized_sdf[b][c] = sdf
-
     return normalized_sdf
 
 
@@ -170,12 +167,11 @@ def compute_sdf(img_gt, out_shape):
              -inf|x-y|; x in segmentation
              +inf|x-y|; x out of segmentation
     """
-
     img_gt = img_gt.astype(np.uint8)
 
     gt_sdf = np.zeros(out_shape)
 
-    for b in range(out_shape[0]):  # batch size
+    for b in range(out_shape[0]):
         for c in range(1, out_shape[1]):
             posmask = img_gt[b].astype(np.bool)
             if posmask.any():
@@ -201,36 +197,22 @@ def boundary_loss(outputs_soft, gt_sdf):
     dc = gt_sdf[:, 1, ...]
     multipled = torch.mul(pc, dc)
     bd_loss = multipled.mean()
-
     return bd_loss
 
 
 def hd_loss(seg_soft, gt, seg_dtm, gt_dtm):
-    """
-    compute huasdorff distance loss for binary segmentation
-    input: seg_soft: softmax results,  shape=(b,2,x,y,z)
-           gt: ground truth, shape=(b,x,y,z)
-           seg_dtm: segmentation distance transform map; shape=(b,2,x,y,z)
-           gt_dtm: ground truth distance transform map; shape=(b,2,x,y,z)
-    output: boundary_loss; sclar
-    """
-
-    delta_s = (seg_soft[:, 1, ...] - gt.float()) ** 2  # [4, 320, 320]
-    # print('delta shape:', delta_s.shape)
+    delta_s = (seg_soft[:, 1, ...] - gt.float()) ** 2
     s_dtm = seg_dtm[:, 1, ...] ** 2
     g_dtm = gt_dtm[:, 1, ...] ** 2
-    dtm = s_dtm + g_dtm  # [4, 320, 320]
-    # print('dtm shape:', dtm.shape)
+    dtm = s_dtm + g_dtm
     multipled = torch.mul(delta_s, dtm)
-    # print('dtm shape:', multipled.shape)
     hd_loss = multipled.mean()
-
     return hd_loss
 
 
 def labeled_slices(dataset, patiens_num):
     ref_dict = None
-    if "IRCAD" in dataset:  # 1-1298 are IRCAD slices, others are MSD slices
+    if "IRCAD" in dataset:  # 1-1298 are IRCAD, others are MSD
         ref_dict = {"10": 1298}
     else:
         print("Error")
@@ -257,7 +239,6 @@ def train(args, snapshot_path):
     pretrain_model = args.pretrain_model
 
     def create_model(ema=False):
-        # Network definition
         model = net_factory(net_type=args.model, in_chns=2,
                             class_num=num_classes)
         if ema:
@@ -275,10 +256,10 @@ def train(args, snapshot_path):
     def worker_init_fn(worker_id):
         random.seed(args.seed + worker_id)
 
-    db_train = BaseDataSets_IRCAD_SSL_concat(base_dir=args.root_path, split="train", num=None, transform=transforms.Compose([
+    db_train = BaseDataSets_IRCAD_SSL_concat_recon(base_dir=args.root_path, split="train", num=None, transform=transforms.Compose([
         RandomGenerator_IRCAD_concat(args.patch_size)]))
 
-    db_val = BaseDataSets_IRCAD_SSL_concat(base_dir=args.root_path, split="val")
+    db_val = BaseDataSets_IRCAD_SSL_concat_recon(base_dir=args.root_path, split="val")
 
     total_slices = len(db_train)
     labeled_slice = labeled_slices(args.root_path, args.labeled_num)
@@ -308,6 +289,7 @@ def train(args, snapshot_path):
     max_epoch = max_iterations // len(trainloader) + 1
     best_performance = 0.0
     iterator = tqdm(range(max_epoch), ncols=70)
+    weak_supervised_loss = 0.0
     for epoch_num in iterator:
         for i_batch, sampled_batch in enumerate(trainloader):
 
@@ -324,6 +306,22 @@ def train(args, snapshot_path):
                 ema_output = ema_model(ema_inputs)
                 ema_output_soft = torch.softmax(ema_output, dim=1)
 
+            # Uncertainty Estimate
+            T = 4
+            _, _, w, h = unlabeled_volume_batch.shape
+            volume_batch_r = unlabeled_volume_batch.repeat(2, 1, 1, 1)
+            stride = volume_batch_r.shape[0] // 2
+            preds = torch.zeros([stride * T, num_classes, w, h]).cuda()
+            for i in range(T//2):
+                ema_inputs = volume_batch_r + torch.clamp(torch.randn_like(volume_batch_r) * 0.1, -0.2, 0.2)
+                with torch.no_grad():
+                    preds[2 * stride * i:2 * stride * (i + 1)] = ema_model(ema_inputs)
+            preds = F.softmax(preds, dim=1)
+            preds = preds.reshape(T, stride, num_classes, w, h)
+            preds = torch.mean(preds, dim=0)
+            uncertainty = -1.0 * torch.sum(preds*torch.log(preds + 1e-6), dim=1, keepdim=True)
+            uncertainty = uncertainty/math.log(2) # normalize uncertainty cuz ln2 is the max value
+
             loss_ce = ce_loss(outputs[:args.labeled_bs], label_batch[:][:args.labeled_bs].long())
             loss_dice = dice_loss(outputs_soft[:args.labeled_bs], label_batch[:args.labeled_bs].unsqueeze(1))
 
@@ -332,7 +330,6 @@ def train(args, snapshot_path):
 
             # boundary loss
             with torch.no_grad():
-                # defalut using compute_sdf; however, compute_sdf1_1 is also worth to try;
                 gt_sdf_npy = compute_sdf1_1(label_batch.cpu().numpy(), outputs_soft.shape)
                 gt_sdf = torch.from_numpy(gt_sdf_npy).float().cuda(outputs_soft.device.index)
             loss_bd = boundary_loss(outputs_soft[:args.labeled_bs], gt_sdf[:args.labeled_bs])
@@ -340,27 +337,24 @@ def train(args, snapshot_path):
             supervised_loss = 0.5 * (loss_ce + loss_dice) + loss_focal + 0.5 * loss_bd
 
 
-            # Confident Learning - weakly supervised Loss
+            # L_supervised_loss
             noisy_label_batch = label_batch[args.labeled_bs:]
             CL_inputs = unlabeled_volume_batch
-            if iter_num < 4000:
+            if iter_num < 200:
                 loss_ce_weak = 0.0
-            elif iter_num >= 4000:
+            elif iter_num >= 200:
                 with torch.no_grad():
                     out_main = ema_model(CL_inputs)
-                    pred_soft_np = torch.softmax(out_main, dim=1).cpu().detach().numpy() # (bs,2,H,W)
-                    # print('Shape of pred_soft_np:', pred_soft_np.shape)
+                    pred_soft_np = torch.softmax(out_main, dim=1).cpu().detach().numpy() 
 
-                masks_np = noisy_label_batch.cpu().detach().numpy() # (bs,2,H,W)
-                # print('Shape of masks_np:', masks_np.shape)
+                masks_np = noisy_label_batch.cpu().detach().numpy()
 
                 preds_softmax_np_accumulated = np.swapaxes(pred_soft_np, 1, 2)
                 preds_softmax_np_accumulated = np.swapaxes(preds_softmax_np_accumulated, 2, 3)
                 preds_softmax_np_accumulated = preds_softmax_np_accumulated.reshape(-1, num_classes)
                 preds_softmax_np_accumulated = np.ascontiguousarray(preds_softmax_np_accumulated)
-
                 masks_np_accumulated = masks_np.reshape(-1).astype(np.uint8)
-
+				
                 assert masks_np_accumulated.shape[0] == preds_softmax_np_accumulated.shape[0]
 
                 CL_type = args.CL_type
@@ -371,42 +365,44 @@ def train(args, snapshot_path):
                                                                    prune_method='both', n_jobs=1)
                     elif CL_type in ['prune_by_class', 'prune_by_noise_rate']:
                         noise = cleanlab.pruning.get_noise_indices(masks_np_accumulated, preds_softmax_np_accumulated,
-                                                                   prune_method=CL_type,
-                                                                   n_jobs=1)
+                                                                   prune_method=CL_type, n_jobs=1)
 
-                    confident_maps_np = noise.reshape(-1, 320, 320).astype(np.uint8)  # (bs, 320, 320)
+                    confident_maps_np = noise.reshape(-1, 320, 320).astype(np.uint8)
 
-                    # Correct the label
-                    correct_type = 'smooth'
-                    if correct_type == 'smooth':
+                    # label Refinement
+                    correct_type = 'uncertainty_smooth'
+                    if correct_type == 'fixed_smooth':
                         smooth_arg = 0.8
                         corrected_masks_np = masks_np + confident_maps_np * np.power(-1, masks_np) * smooth_arg
-                        print('Smoothly correct the noisy label')
+                        print('FS correct the noisy label')
+                    elif correct_type == 'uncertainty_smooth':
+                        uncertainty_np = uncertainty.cpu().detach().numpy()
+                        uncertainty_np_squeeze = np.squeeze(uncertainty_np)
+                        smooth_arg = 1 - uncertainty_np_squeeze
+                        corrected_masks_np = masks_np + confident_maps_np * np.power(-1, masks_np) * smooth_arg
+                        print('UDS correct the noisy label')
                     else:
                         corrected_masks_np = masks_np + confident_maps_np * np.power(-1, masks_np)
+						print('Hard correct the noisy label')
 
                     noisy_label_batch = torch.from_numpy(corrected_masks_np).cuda(outputs_soft.device.index)
-                    # print('Shape of noisy_label_batch:', noisy_label_batch.shape)
                     loss_ce_weak = ce_loss(outputs[args.labeled_bs:], noisy_label_batch.long())
                     loss_focal_weak = focal_loss(outputs[args.labeled_bs:], noisy_label_batch.long())
-                    supervised_loss = supervised_loss + 0.5 * (loss_ce_weak + loss_focal_weak)
+                    weak_supervised_loss = 0.5 * (loss_ce_weak + loss_focal_weak)
 
                 except Exception as e:
-                    loss_ce_weak = loss_ce_weak
+                    print('cannot identify errors')
 
 
             # Unsupervised Consistency Loss
             consistency_weight = get_current_consistency_weight(iter_num // 150)
-            if iter_num < 1000:
-                consistency_loss = 0.0
-            else:
-                consistency_loss = torch.mean((outputs_soft[args.labeled_bs:] - ema_output_soft) ** 2)
+            consistency_loss = torch.mean((outputs_soft[args.labeled_bs:] - ema_output_soft) ** 2)
 
-            # Total Loss = Supervised + Consistency
-            loss = supervised_loss + consistency_weight * consistency_loss
+            # Total Loss = H_Supervised + Consistency + L_supervised
+            loss = supervised_loss + consistency_weight * (consistency_loss + args.weak_weight * weak_supervised_loss)
 
             optimizer.zero_grad()
-            loss.backward()
+            loss.backward(retain_graph=True)
             optimizer.step()
             update_ema_variables(model, ema_model, args.ema_decay, iter_num)
             lr_ = base_lr * (1.0 - iter_num / max_iterations) ** 0.9
@@ -422,7 +418,7 @@ def train(args, snapshot_path):
             print('-'*50)
 
             # Validation
-            if iter_num > 0 and iter_num % 100 == 0:
+            if iter_num > 3000 and iter_num % 50 == 0:
                 model.eval()
                 metric_list = 0.0
                 for i_batch, sampled_batch in enumerate(valloader):
@@ -455,12 +451,6 @@ def train(args, snapshot_path):
                 logging.info(
                     'iteration %d : mean_dice : %f mean_hd95 : %f' % (iter_num, performance, mean_hd95))
                 model.train()
-
-            if iter_num % 3000 == 0:
-                save_mode_path = os.path.join(
-                    snapshot_path, 'iter_' + str(iter_num) + '.pth')
-                torch.save(model.state_dict(), save_mode_path)
-                logging.info("save model to {}".format(save_mode_path))
 
             if iter_num >= max_iterations:
                 break

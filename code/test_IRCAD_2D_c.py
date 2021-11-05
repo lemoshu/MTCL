@@ -16,7 +16,6 @@ from tqdm import tqdm
 from skimage import measure
 import scipy.ndimage as nd
 
-# from networks.efficientunet import UNet
 from networks.net_factory import net_factory
 
 parser = argparse.ArgumentParser()
@@ -143,7 +142,7 @@ def test_whole_volumes(case, net, test_save_path, post_process=False):
         prob_slice = image[int(image.shape[0]/2)+ind, :, :] # from [115, 230)
         img = np.expand_dims(slice, axis=0)
         prob_ = np.expand_dims(prob_slice, axis=0)
-        concat_input = np.concatenate((img, prob_), axis=0) # (2, H, W)
+        concat_input = np.concatenate((img, prob_), axis=0)
         input = torch.from_numpy(concat_input).unsqueeze(0).float().cuda()
         net.eval()
         # start predict
@@ -191,7 +190,7 @@ def Inference_whole(FLAGS):
         label, prediction = test_whole_volumes(case, net, test_save_path, post_process=True)
         prediction_all = np.concatenate((prediction_all, prediction), axis=0)
         label_all = np.concatenate((label_all, label), axis=0)
-        print(label_all.shape, prediction_all.shape)  # D x H x W
+        print(label_all.shape, prediction_all.shape)
 
     avg_metric = calculate_metric_all_volume(prediction_all == 1, label_all == 1)
     return avg_metric

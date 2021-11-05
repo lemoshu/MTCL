@@ -41,17 +41,16 @@ def test_single_volume(image, label, net, classes, patch_size=[256, 256]):
 
 # ---------------------------IRCAD----------------------
 def test_single_concat_volume(image, label, net, classes):
-    image, label = image.squeeze(0).cpu().detach().numpy(), label.squeeze(0).cpu().detach().numpy() #unsqueeze to remove the batch size axis
+    image, label = image.squeeze(0).cpu().detach().numpy(), label.squeeze(0).cpu().detach().numpy()
     prediction = np.zeros_like(label)
     for ind in range(int(image.shape[0]/2)):
         slice = image[ind, :, :] 
         prob_slice = image[int(image.shape[0]/2)+ind, :, :]
         img = np.expand_dims(slice, axis=0)
         prob_ = np.expand_dims(prob_slice, axis=0)
-        concat_input = np.concatenate((img, prob_), axis=0) # (2, H, W)
+        concat_input = np.concatenate((img, prob_), axis=0) 
         input = torch.from_numpy(concat_input).unsqueeze(0).float().cuda()
         net.eval()
-        # start predict
         with torch.no_grad():
             out = torch.argmax(torch.softmax(
                 net(input), dim=1), dim=1).squeeze(0)

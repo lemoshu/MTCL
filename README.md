@@ -48,7 +48,7 @@ dataloaders/
 3. Training script
 ```
 cd code
-python train_unet_2D_MT_IRCAD_concat_CL.py
+python train_MTCL_2D.py
 ```
 
 4. Test script

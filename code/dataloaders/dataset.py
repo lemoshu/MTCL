@@ -246,6 +246,48 @@ class BaseDataSets_IRCAD_SSL_concat(Dataset):
             sample = self.transform(sample)
         sample["idx"] = idx
         return sample
+        
+
+# Adapt to SSL setting after reconstruction
+class BaseDataSets_IRCAD_SSL_concat_recon(Dataset):
+    def __init__(self, base_dir=None, split='train', num=None, transform=None):
+        self._base_dir = base_dir
+        self.sample_list = []
+        self.split = split
+        self.transform = transform
+        if self.split == 'train':
+            with open(self._base_dir + '/train_merge_list.txt', 'r') as f1:
+                self.sample_list = f1.readlines()
+            self.sample_list = [item.replace('\n', '') for item in self.sample_list]
+
+        elif self.split == 'val':
+            with open(self._base_dir + '/test.txt', 'r') as f:
+                self.sample_list = f.readlines()
+            self.sample_list = [item.replace('\n', '') for item in self.sample_list]
+        if num is not None and self.split == "train":
+            self.sample_list = self.sample_list[:num]
+        print("total {} samples".format(len(self.sample_list)))
+
+    def __len__(self):
+        return len(self.sample_list)
+
+    def __getitem__(self, idx):
+        case = self.sample_list[idx]
+        # Change the organ here
+        organ ='ROI'
+        if self.split == "train":
+            h5f = h5py.File(self._base_dir +
+                            "/train_recon_2D_merge_h5/{}.h5".format(case), 'r')
+        else:
+            h5f = h5py.File(self._base_dir + "/test_{}_concat_h5/{}.h5".format(organ, case), 'r')
+
+        image = h5f['image'][:]
+        label = h5f['label_{}'.format(organ)][:]
+        sample = {'image': image, 'label_{}'.format(organ): label}
+        if self.split == "train":
+            sample = self.transform(sample)
+        sample["idx"] = idx
+        return sample
 
 
 class RandomGenerator_IRCAD_concat(object):
