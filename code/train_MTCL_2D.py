@@ -292,7 +292,7 @@ def train(args, snapshot_path):
             preds = preds.reshape(T, stride, num_classes, w, h)
             preds = torch.mean(preds, dim=0)
             uncertainty = -1.0 * torch.sum(preds*torch.log(preds + 1e-6), dim=1, keepdim=True)
-            uncertainty = uncertainty/math.log(2) # normalize uncertainty cuz ln2 is the max value
+            uncertainty = uncertainty/math.log(2) # normalize uncertainty, cuz ln2 is the max value
 
             loss_ce = ce_loss(outputs[:args.labeled_bs], label_batch[:][:args.labeled_bs].long())
             loss_dice = dice_loss(outputs_soft[:args.labeled_bs], label_batch[:args.labeled_bs].unsqueeze(1))
