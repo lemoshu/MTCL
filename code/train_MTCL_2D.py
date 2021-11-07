@@ -332,7 +332,7 @@ def train(args, snapshot_path):
                 CL_type = args.CL_type
 
                 try:
-                    if CL_type in ['both', 'Qij']:
+                    if CL_type in ['both']:
                         noise = cleanlab.pruning.get_noise_indices(masks_np_accumulated, preds_softmax_np_accumulated,
                                                                    prune_method='both', n_jobs=1)
                     elif CL_type in ['prune_by_class', 'prune_by_noise_rate']:
