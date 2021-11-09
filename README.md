@@ -47,14 +47,12 @@ dataloaders/
 
 3. Training script
 ```
-cd code
 python train_MTCL_2D.py
 ```
 
 4. Test script
-- The processed h5 files (concatenated volumes (img and prob map)) should be used for inference.    
+The processed h5 files (concatenated volumes (img and prob map)) should be used for inference.    
 ```
-cd code
 python test_IRCAD_2D_c.py
 ```
 
