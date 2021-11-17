@@ -65,7 +65,4 @@ If our work brings some insights to you, please cite our paper as:
   booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
   year={2021}
 }
-```
-
-## Acknowledgement
-The backbone, training and test scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS). Thanks Xiangde!     
+```   
