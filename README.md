@@ -4,15 +4,15 @@
 
 
 ## Citation
-If our work brings some insights to you, please cite our paper as:
+If our work brings insights to you, or you use the codebase, please cite our paper as:
 ```
 @artical{xu2021noisylabel,
   title={Noisy Labels are Treasure: Mean-Teacher-Assisted Confident Learning for Hepatic Vessel Segmentation},
   author={Zhe Xu, Donghuan Lu, Yixin Wang, Jie Luo, Jagadeesan Jayender, Kai Ma, Yefeng Zheng and Xiu Li},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  booktitle={International Conference on Medical Image Computing and Computer Assisted Intervention},
   year={2021}
 }
 ```
 
 ## Acknowledgement
-The backbone, training and test scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS). Thanks Xiangde!     
+The backbone, training and test scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).    
