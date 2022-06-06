@@ -34,9 +34,9 @@ import cleanlab
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
-                    default='../data/LA_corrupt_data_8_h5', help='Name of Experiment')#####
+                    default='../data/LA_corrupt_data_8_h5', help='Name of Experiment')##### Change dataset
 parser.add_argument('--exp', type=str,
-                    default='LA_hard_MTCL', help='experiment_name')####
+                    default='LA_hard_MTCL', help='experiment_name')#### Change exp name
 parser.add_argument('--model', type=str,
                     default='vnet', help='model_name')
 parser.add_argument('--max_iterations', type=int,
@@ -56,7 +56,7 @@ parser.add_argument('--gpu', type=str, default='0',
 # label and unlabel
 parser.add_argument('--labeled_bs', type=int, default=2,
                     help='labeled_batch_size per gpu')
-parser.add_argument('--clean_labeled_num', type=int, default=8,#####
+parser.add_argument('--clean_labeled_num', type=int, default=8,##### Accordingly change HQ setting
                     help='labeled data')
 parser.add_argument('--total_sample', type=int, default=80,
                     help='total samples')
@@ -80,7 +80,7 @@ parser.add_argument('--refine_type', type=str,
 # entropy and consistency
 parser.add_argument('--use_consistency', type=int,
                     default=1, help='see if use the perturbed consistency (image-only information)') 
-parser.add_argument('--use_entropymin', type=int,#### degradation
+parser.add_argument('--use_entropymin', type=int,# degradation
                     default=0, help='see if use the entropy minimization')      
 
 
