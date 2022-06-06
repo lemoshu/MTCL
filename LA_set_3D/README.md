@@ -1,10 +1,32 @@
-# Mean-Teacher-Assisted Confident Learning (MTCL)
-- Implementation of our work Mean-Teacher-assisted Confident Learning for learning segmentation from mixed-quality labeled data".    
-- [Note] This's an initial report, code will be further re-organized but the core implementation is included that can be easily adapted to your own application. Stay tuned!
+# MTCL-3D for Left Atrium Segmentation
+3D version is available!
 
+
+## Usage
+
+1. Clone the repo:
+```
+cd MTCL/LA_set_3D
+```
+
+2. Data Preparation
+Refer to ./data
+
+
+3. Training script
+```
+cd ./code
+python train_MTCL_3D.py
+```
+
+4. Test script 
+```
+cd ./code
+python test_3D.py
+```
 
 ## Citation
-If our work brings insights to you, or you use the codebase, please cite our paper as:
+If our work brings some insights to you, please cite our paper as:
 ```
 @article{xu2022anti,
   title={Anti-interference from Noisy Labels: Mean-Teacher-assisted Confident Learning for Medical Image Segmentation},
@@ -20,7 +42,4 @@ If our work brings insights to you, or you use the codebase, please cite our pap
   booktitle={International Conference on Medical Image Computing and Computer Assisted Intervention},
   year={2021}
 }
-```
-
-## Acknowledgement
-The backbone, training and test scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).    
+```   
