@@ -40,7 +40,7 @@ parser.add_argument('--exp', type=str,
 parser.add_argument('--model', type=str,
                     default='vnet', help='model_name')
 parser.add_argument('--max_iterations', type=int,
-                    default=15000, help='maximum epoch number to train')
+                    default=8000, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int, default=4,
                     help='batch_size per gpu')
 parser.add_argument('--deterministic', type=int,  default=1,
