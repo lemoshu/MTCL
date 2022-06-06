@@ -36,7 +36,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
                     default='../data/LA_corrupt_data_8_h5', help='Name of Experiment')##### Change dataset
 parser.add_argument('--exp', type=str,
-                    default='LA_hard_MTCL', help='experiment_name')#### Change exp name
+                    default='LA_MTCL_hard', help='experiment_name')#### Change exp name
 parser.add_argument('--model', type=str,
                     default='vnet', help='model_name')
 parser.add_argument('--max_iterations', type=int,
