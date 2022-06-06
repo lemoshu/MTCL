@@ -207,7 +207,7 @@ def train(args, snapshot_path):
             
                 confident_maps_np = noise.reshape(-1, patch_size[0], patch_size[1], patch_size[2]).astype(np.uint8)
                 
-                # Correct the LQ label
+                # Correct the LQ label for our focused binary task
                 correct_type = args.refine_type
                 if correct_type == 'smooth':
                     smooth_arg = 0.8
