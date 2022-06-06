@@ -1,5 +1,4 @@
 # Mean-Teacher-Assisted Confident Learning (MTCL)
-<<<<<<< HEAD
 - Implementation of our work Mean-Teacher-assisted Confident Learning for learning segmentation from mixed-quality labeled data".    
 - [Note] This's an initial report, code will be further re-organized but the core implementation is included that can be easily adapted to your own application. Stay tuned!
 
@@ -24,4 +23,4 @@ If our work brings insights to you, or you use the codebase, please cite our pap
 ```
 
 ## Acknowledgement
-The backbone, training and test scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).    
+The scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).    
