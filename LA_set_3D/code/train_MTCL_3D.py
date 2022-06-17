@@ -207,9 +207,9 @@ def train(args, snapshot_path):
                     # noise = cleanlab.pruning.get_noise_indices(masks_np_accumulated, ema_output_soft_np_accumulated, prune_method=CL_type, n_jobs=1)
                 # For cleanlab v2.0
                 if CL_type in ['both']:
-                    noise = cleanlab.filter.find_label_issues(masks_np_accumulated, ema_output_soft_np_accumulated, prune_method='both', n_jobs=1)
+                    noise = cleanlab.filter.find_label_issues(masks_np_accumulated, ema_output_soft_np_accumulated, filter_by='both', n_jobs=1)
                 elif CL_type in ['prune_by_class', 'prune_by_noise_rate']:
-                    noise = cleanlab.filter.find_label_issues(masks_np_accumulated, ema_output_soft_np_accumulated, prune_method=CL_type, n_jobs=1)
+                    noise = cleanlab.filter.find_label_issues(masks_np_accumulated, ema_output_soft_np_accumulated, filter_by=CL_type, n_jobs=1)
                 confident_maps_np = noise.reshape(-1, patch_size[0], patch_size[1], patch_size[2]).astype(np.uint8)
                 
                 # Correct the LQ label for our focused binary task
