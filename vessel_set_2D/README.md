@@ -8,7 +8,7 @@ ____
 
 ## Requirements
 Some important required packages include:
-* [Pytorch][torch_link] version >=0.4.1.
+* Pytorch version >=0.4.1.
 * Python == 3.6 
 * Cleanlab [Note that this repo is using v1.0, while the latest v2.0 is substantially remolded, please refer to the [migration hints](https://docs.cleanlab.ai/v2.0.0/migrating/migrate_v2.html?highlight=get_noise_indices)]
 * Some basic python packages such as Numpy, Scikit-image, SimpleITK, Scipy, etc. Please check the package list.
