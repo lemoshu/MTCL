@@ -1,6 +1,7 @@
 # Mean-Teacher-Assisted Confident Learning (MTCL)
 - Implementation of our work Mean-Teacher-assisted Confident Learning for learning segmentation from mixed-quality labeled data.    
-- [Note] This's an initial report, code will be further re-organized but the core implementation is included that can be easily adapted to your own application. Stay tuned!
+- Note that, our label denoising scheme aims at the binary task. 
+- [Note] This's an initial report, code will be further re-organized but the core implementation is included that can be easily adapted to your own application. 
 
 
 ## Citation
