@@ -24,4 +24,4 @@ If our work brings insights to you, or you use the codebase, please cite our pap
 ```
 
 ## Acknowledgement
-The scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS).    
+The scripts are mainly based on the project [SSL4MIS](https://github.com/HiLab-git/SSL4MIS) and the API [cleanlab](https://github.com/cleanlab/cleanlab).    
