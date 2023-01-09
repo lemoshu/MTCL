@@ -327,8 +327,9 @@ if __name__=='__main__':
     # test_volume_process(test_img_Dir, msk_baseDir, organ)
 
     # liver
+    # Note: Some patients don’t consistently have venacava named folder, they named them venoussystem. Rename the folders to label_venacava.
     ROI_baseDir = '../../data/IRCAD/label_liver/'
-    vessel_msk1_baseDir = '../../data/IRCAD/label_venacava/'
+    vessel_msk1_baseDir = '../../data/IRCAD/label_venacava/' 
     vessel_msk2_baseDir = '../../data/IRCAD/label_portalvein/'
     organ = 'vessel'
 
